@@ -1,6 +1,6 @@
 @import url('https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css');
 
-.body {
+body {
     font-family: 'Open Sans', sans-serif;
 }
 
@@ -83,8 +83,8 @@
         position: fixed;
         top: 50%;
         left: 50%;
-        -webkit-transform: translate(-50%, -50%);
-        transform: translate(-50%, -50%);
+        -webkit-transform: translate(-30%, -30%);
+        transform: translate(-30%, -30%);
     }
 
     .commentTable {
@@ -181,7 +181,7 @@
         /* margin: 40px auto; */
         text-transform: lowercase;
         line-height: 145%;
-        font-size: 18pt;
+        font-size: 16pt;
         font-variant: small-caps;
         word-break: break-all;
         margin-left: 45px;
@@ -230,7 +230,9 @@
     }
 
     #addButt {
+
     }
 
     .classes button {
+        
     }
