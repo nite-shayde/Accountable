@@ -1,7 +1,5 @@
 import React from 'react';
 import axios from 'axios';
-import Button from 'react-bootstrap/Button';
-// import Modal from 'react-bootstrap/Modal';
 import Modal from './Modal.jsx';
 import StudentModal from './newStudentModal.jsx';
 
@@ -34,11 +32,14 @@ class Students extends React.Component {
         });
       });
   }
+
   getStudents() {
+    const { classID } = this.props;
+
     return axios.get('/students', {
       params: {
-        classID: this.props.classID,
-      }
+        classID: classID,
+      },
     });
   }
 
@@ -51,13 +52,16 @@ class Students extends React.Component {
 
   // add students to database
   addStudents() {
-    const { name, parentName, parentEmail, parentPhone } = this.state;
+    const { classID } = this.props;
+    const {
+      name, parentName, parentEmail, parentPhone,
+    } = this.state;
     axios.post('/students', {
       name,
       parentName,
       email: parentEmail,
       phone: parentPhone,
-      classID: this.props.classID,
+      classID: classID,
     });
   }
 
@@ -70,16 +74,18 @@ class Students extends React.Component {
   }
 
   addComment(e) {
+    const { students, renderCommentForm } = this.state;
     // when button is clicked,
     // get student in that row and set state of current student to that student
-    const studentID = parseInt(e.target.name);
-    this.state.students.map((student) => {
+    const studentID = parseInt(e.target.name, 10);
+
+    students.map(function commentFunc(student) {
       if (student.id === studentID) {
         this.setState({
           currentStudent: student,
-        }, function () {
+        }, function commentStateFunc() {
           this.setState({
-            renderCommentForm: !this.state.renderCommentForm,
+            renderCommentForm: !renderCommentForm,
           });
         });
       }
@@ -87,17 +93,18 @@ class Students extends React.Component {
   }
 
   showCommentHistory(e) {
-    let studentID = parseInt(e.target.name);
+    const studentID = parseInt(e.target.name, 10);
+    const { students, renderCommentHistory } = this.state;
     // set the state of currentStudent
     // pass down to commenthistory
     // render comment history
-    this.state.students.map((student) => {
+    students.map(function studentSet(student) {
       if (student.id === studentID) {
         this.setState({
           currentStudent: student,
-        }, function () {
+        }, function states() {
           this.setState({
-            renderCommentHistory: !this.state.renderCommentHistory,
+            renderCommentHistory: !renderCommentHistory,
           });
         });
       }
@@ -105,23 +112,32 @@ class Students extends React.Component {
   }
 
   toggleStudents() {
+    const { studentView } = this.state;
     this.setState({
-      studentView: !this.state.studentView
+      studentView: !studentView,
     });
   }
 
 
   render() {
+    const {
+      className, classID, changeState, showList,
+    } = this.props;
+
+    const { students } = this.state;
     return (
       <div>
         <div className="studentListTitle">
-          <h4>Students in {this.props.className}</h4>
+          <h4>
+            Students in
+            {className}
+          </h4>
         </div>
         <div className="addStudentContainer">
-          <StudentModal studentChange={this.changeStudentState} classID={this.props.classID} />
+          <StudentModal studentChange={this.changeStudentState} classID={classID} />
         </div>
         <div className="backButt">
-          <button onClick={(event) => { this.props.changeState(); this.props.showList(); }} className="btn btn-sm">Back</button>
+          <button type="submit" onClick={() => { changeState(); showList(); }} className="btn btn-sm">Back</button>
         </div>
         <div className="studentListDiv">
           <table className="table table-hover table-sm table-condensed">
@@ -136,17 +152,15 @@ class Students extends React.Component {
             </thead>
             <tbody>
               {
-                this.state.students.map((student) => {
-                  return (
-                    <tr className="student-row">
-                      <td>{student.name || 'N/A'}</td>
-                      <td>{student.parentName || 'no parent name'}</td>
-                      <td>{student.phone || 'no phone number'}</td>
-                      <td>{student.email || 'no email'}</td>
-                      <Modal currentStudent={student} name={student.name} />
-                    </tr>
-                  );
-                })
+                students.map(student => (
+                  <tr key={student.id} className="student-row">
+                    <td>{student.name || 'N/A'}</td>
+                    <td>{student.parentName || 'no parent name'}</td>
+                    <td>{student.phone || 'no phone number'}</td>
+                    <td>{student.email || 'no email'}</td>
+                    <Modal currentStudent={student} name={student.name} />
+                  </tr>
+                ))
               }
             </tbody>
           </table>

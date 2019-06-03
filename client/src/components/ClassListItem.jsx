@@ -1,12 +1,11 @@
 import React from 'react';
-import axios from 'axios';
-import Students from './Students.jsx'
+import Students from './Students.jsx';
 
 class ClassListItem extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      studentRender: false, 
+      studentRender: false,
     };
     this.handleClassItemClick = this.handleClassItemClick.bind(this);
     this.changeStudentState = this.changeStudentState.bind(this);
@@ -15,8 +14,10 @@ class ClassListItem extends React.Component {
   }
 
   changeStudentState() {
+    const { studentRender } = this.state;
+
     this.setState({
-      studentRender: !this.state.studentRender,
+      studentRender: !studentRender,
     });
   }
 
@@ -29,31 +30,41 @@ class ClassListItem extends React.Component {
   hideClassListItems() {
     const htmlCollection = document.getElementsByClassName('something-else');
     const arrayCollection = Array.from(htmlCollection);
-      arrayCollection.forEach(element => {
+    arrayCollection.forEach((element) => {
       element.style.display = 'none';
-    })
+    });
   }
 
   showClassListItems() {
     const htmlCollection = document.getElementsByClassName('something-else');
     const arrayCollection = Array.from(htmlCollection);
-    console.log(arrayCollection);
     arrayCollection.forEach(element => {
       element.style.display = 'block';
-    })
+    });
   }
 
   render() {
+    const { studentRender } = this.state;
+    const { eachClass } = this.props;
     return (
-        <div>
-                <ul className="studentList">
-          <li className="something-else" onClick={this.handleClassItemClick} > {this.props.eachClass.name}</li>
-                    {this.state.studentRender ? <Students showList={this.showClassListItems} changeState={this.changeStudentState} className={this.props.eachClass.name} classID={this.props.eachClass.id} /> : null}
-                </ul>
-            </div>
+      <div>
+        <ul className="studentList">
+          <li className="something-else" onClick={this.handleClassItemClick}>
+            {eachClass.name}
+          </li>
+          {studentRender
+            ? (
+              <Students
+                showList={this.showClassListItems}
+                changeState={this.changeStudentState}
+                className={eachClass.name}
+                classID={eachClass.id}
+              />
+            ) : null}
+        </ul>
+      </div>
     );
   }
-
 }
 
 export default ClassListItem;

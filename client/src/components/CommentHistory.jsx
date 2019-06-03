@@ -1,39 +1,38 @@
 import React from 'react';
 import axios from 'axios';
-const moment = require('moment');
 
 class CommentHistory extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      comments: [],
+    };
 
-    constructor(props) {
-        super(props);
-        this.state = {
-            comments: [],
-        }
-        this.getComments = this.getComments.bind(this);
-    }
+    this.getComments = this.getComments.bind(this);
+  }
 
-    // get all comments on comp mount
+  componentDidMount() {
+    this.getComments()
+      .then((data) => {
+        // console.log(data);
+        this.setState({
+          comments: data.data,
+        });
+      });
+  }
 
-    getComments() {
-        return axios.get('/comments', {
-            params: {
-                studentID: this.props.student.id,
-            }
-        })
-    }
+  getComments() {
+      const { student } = this.props;
+    return axios.get('/comments', {
+      params: {
+        studentID: student.id,
+      },
+    });
+  }
 
-    componentDidMount() {
-        this.getComments()
-        .then((data) => {
-            // console.log(data);
-            this.setState({
-                comments: data.data,
-            })
-        })
-    }
 
-    render() {
-        return (
+  render() {
+    return (
             <div>
                 <h3>Comment History for {this.props.student.name}</h3>
                 <table>
@@ -42,22 +41,22 @@ class CommentHistory extends React.Component {
                         <th>Text</th>
                     </tr>
                     {this.state.comments.map(comment => {
-                        return (
+                      return (
                             <tr>
                                 <td>{comment.createdAt}</td>
                                 {/* <td>{moment.format(comment.createdAt)}</td> */}
                                 {}
                                 <td>{comment.comment}</td>
                             </tr>
-                        );
+                      );
 
                     })}
                 </table>
             </div>
-        );
-    }
+    );
+  }
 }
 
 
 
-export default CommentHistory
+export default CommentHistory;

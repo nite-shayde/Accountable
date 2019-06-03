@@ -1,13 +1,10 @@
 import React, { Component } from 'react';
-import ReactDOM from 'react-dom'; 
-import withFirebaseAuth from 'react-with-firebase-auth';
-import * as firebase from 'firebase/app';
+import ReactDOM from 'react-dom';
 import 'firebase/auth';
+import axios from 'axios';
 import { auth, provider } from '../firebaseConfig.js';
 import TeacherHome from './TeacherHome.jsx';
-import axios from 'axios';
-import '../../styles/styles.css'
-import Button from 'react-bootstrap/Button';
+import '../../styles/styles.css';
 
 class App extends Component {
   constructor(props) {
@@ -19,7 +16,7 @@ class App extends Component {
     this.logout = this.logout.bind(this);
   }
 
- /**
+  /**
   * component did mount changes state of user form null to user from firebase login
   */
 
@@ -46,7 +43,7 @@ class App extends Component {
 
   /**
    * login function makes a post request to '/login', sending email and name on request body
-   * updates the state of user to the user who has logged in 
+   * updates the state of user to the user who has logged in
    */
 
   login() {
@@ -69,13 +66,14 @@ class App extends Component {
    */
 
   render() {
-    const authButton = this.state.user
-      ? <TeacherHome user={this.state.user} logout={this.logout} />
+    const { user } = this.state;
+    const authButton = user
+      ? <TeacherHome user={user} logout={this.logout} />
       : (
         <div className="logincontainer">
           <h3 className="introtitle">Accountable</h3>
           <p>The app that lets teachers do more</p>
-          <input onClick={this.login} className="loginButton" type="image" src="https://www.c-learning.net/storage/app/media/img/buttons/google-login-button.png" />
+          <input onClick={this.login} alt="" className="loginButton" type="image" src="https://www.c-learning.net/storage/app/media/img/buttons/google-login-button.png" />
         </div>
       );
     return (
