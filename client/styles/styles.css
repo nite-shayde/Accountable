@@ -178,10 +178,9 @@ body {
         font-family: "Adobe Caslon Pro", "Hoefler Text", Georgia, Garamond, Times, serif;
         letter-spacing:0.1em;
         text-align:center;
-        /* margin: 40px auto; */
         text-transform: lowercase;
         line-height: 145%;
-        font-size: 16pt;
+        font-size: 18pt;
         font-variant: small-caps;
         word-break: break-all;
         margin-left: 45px;
@@ -197,8 +196,6 @@ body {
         font-size: 18pt;
         margin-top: 75px;
         margin-left: -75px;
-        /* margin-right: px; */
-        /* position: left; */
     }
 
     #logoutButt {
@@ -216,7 +213,6 @@ body {
 
     .table {
         margin-right: -110px;
-        margin-top: 160px;
     }
 
     .backButt {
@@ -229,10 +225,3 @@ body {
         width: 200px;
     }
 
-    #addButt {
-
-    }
-
-    .classes button {
-        
-    }

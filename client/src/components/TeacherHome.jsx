@@ -24,8 +24,8 @@ class TeacherHome extends React.Component {
   componentDidMount() {
     this.getTeacherData()
       .then((data) => {
-        const name = data.data[0].name;
-        const id = data.data[0].id;
+        const { name, id } = data.data[0];
+
         this.setState({
           currentTeacherId: id,
           currentTeacherName: name,
@@ -42,25 +42,28 @@ class TeacherHome extends React.Component {
   }
 
   getTeacherData() {
+    const { user } = this.props;
     return axios.get('/teachers', {
       params: {
-        email: this.props.user.email,
+        email: user.email,
       },
     });
   }
 
   getClassData() {
+    const { currentTeacherId } = this.state;
     return axios.get('/classes', {
       params: {
-        teacherID: this.state.currentTeacherId,
+        teacherID: currentTeacherId,
       },
     });
   }
 
   submitClass(className) {
+    const { currentTeacherId } = this.state;
     axios.post('/classes', {
       className,
-      id: this.state.currentTeacherId,
+      id: currentTeacherId,
     })
       .then(() => {
         this.getClassData()
@@ -73,7 +76,8 @@ class TeacherHome extends React.Component {
   }
 
   submitClassHandler() {
-    this.submitClass(this.state.inputState);
+    const { inputState } = this.state;
+    this.submitClass(inputState);
     this.renderClassInput();
   }
 
@@ -85,35 +89,49 @@ class TeacherHome extends React.Component {
   }
 
   renderClassInput() {
+    const { renderInput } = this.state;
     this.setState({
-      renderInput: !this.state.renderInput,   
+      renderInput: !renderInput,
     });
   }
 
   render() {
+    const { logout } = this.props;
+    const {
+      currentTeacherName, renderInput, currentTeacherId, currentTeacherClasses,
+    } = this.state;
     return (
       <div>
         <div className="jumbotron jumbotron-fluid">
           <div className="header">
             <h1 className="title">Accountable</h1>
-            <p id="quote">"Experience teaches only the teachable." </p>
+            <p id="quote">Experience teaches only the teachable.</p>
             <p id="quoteauthor">-Aldous Huxley</p>
-            <button text-align="right" className="btn btn-sm" id="logoutButt" onClick={this.props.logout}>Log Out</button>
+            <button type="submit" text-align="right" className="btn btn-sm" id="logoutButt" onClick={logout}>Log Out</button>
           </div>
         </div>
         <div className="greeting">
-          <h4>Welcome Back, {this.state.currentTeacherName}</h4>
+          <h4>
+            Welcome Back,
+            {currentTeacherName}
+          </h4>
         </div>
         <br />
         <div className="classes">
-          <button className="btn btn-dark btn-sm" onClick={this.renderClassInput}>Add Class</button>
-          {this.state.renderInput 
-            ? (<div>
-            <input placeholder="new class name" onChange={this.changeInputState} />
-            <button className="btn btn-dark btn-sm" onClick={this.submitClassHandler}>Submit</button>
-          </div>)
+          <button type="submit" className="btn btn-dark btn-sm" onClick={this.renderClassInput}>Add Class</button>
+          {renderInput
+            ? (
+              <div>
+                <input placeholder="new class name" onChange={this.changeInputState} />
+                <button type="submit" className="btn btn-dark btn-sm" onClick={this.submitClassHandler}>Submit</button>
+              </div>
+            )
             : null }
-          <Classes teacherID={this.state.currentTeacherId} teacherName={this.state.currentTeacherName} classList={this.state.currentTeacherClasses} />
+          <Classes
+            teacherID={currentTeacherId}
+            teacherName={currentTeacherName}
+            classList={currentTeacherClasses}
+          />
         </div>
       </div>
     );
