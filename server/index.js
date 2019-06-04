@@ -4,7 +4,7 @@ const port = 3000;
 const path = require('path');
 const bodyParser = require('body-parser');
 require('dotenv').config();
-const client = require('twilio')(process.env.accountSid, process.env.authToken);
+// const client = require('twilio')(process.env.accountSid, process.env.authToken);
 const db = require('../database/index');
 
 const app = express();
@@ -23,7 +23,7 @@ app.use(express.static(path.join(__dirname, '../client/dist')));
 app.post('/classes', (req, res) => {
   db.models.Classes.create({
     name: req.body.className,
-    teacherID: req.body.id,
+    teacherID: req.body.id || 1,
   })
     .then(() => {
       console.log('class saved in database successfully');
