@@ -108,6 +108,10 @@ const Comments = sequelize.define('comment', {
 });
 
 
+sequelize.sync().then(() => {
+  Teachers.create({ name: 'jesse', email: 'jesse@jesse.com' });
+});
+
 /**
  * Export models to use on server index.js to add / remove / update data in database
  */
@@ -118,3 +122,6 @@ module.exports.models = {
   Students,
   Comments,
 };
+
+
+// TEST
