@@ -5,6 +5,7 @@ const bodyParser = require('body-parser');
 require('dotenv').config();
 const client = require('twilio')(process.env.accountSid, process.env.authToken);
 const db = require('../database/index');
+
 const port = process.env.SERVER_PORT || 3000;
 
 const {
