@@ -96,7 +96,7 @@ class TeacherHome extends React.Component {
   }
 
   render() {
-    const { logout } = this.props;
+    const { logout, students} = this.props;
     const {
       currentTeacherName, renderInput, currentTeacherId, currentTeacherClasses,
     } = this.state;
@@ -132,6 +132,13 @@ class TeacherHome extends React.Component {
             teacherName={currentTeacherName}
             classList={currentTeacherClasses}
           />
+        </div>
+        <div>
+          <select>
+            <option value="grapefruit">Select Student</option>
+            <option value="lime">students.name</option>
+            <option value="mango">Select Student</option>
+          </select>
         </div>
       </div>
     );
