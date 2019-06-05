@@ -1,11 +1,12 @@
 const express = require('express');
 
-const port = 3000;
 const path = require('path');
 const bodyParser = require('body-parser');
 require('dotenv').config();
 const client = require('twilio')(process.env.accountSid, process.env.authToken);
 const db = require('../database/index');
+
+const port = process.env.SERVER_PORT || 3000;
 
 const {
   Students, Classes, Teachers, Comments,
@@ -224,7 +225,7 @@ app.post('/texts', (req) => {
   const { phone, message, numbers } = req.body;
   if (numbers) {
     Promise.all(
-      numbers.map(number => client.messages.create({
+      numbers.map(number => !number || client.messages.create({
         to: number,
         from: '+15042268038',
         body: message,
