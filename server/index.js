@@ -1,11 +1,11 @@
 const express = require('express');
 
-const port = process.env.SERVER_PORT || 3000;
 const path = require('path');
 const bodyParser = require('body-parser');
 require('dotenv').config();
 const client = require('twilio')(process.env.accountSid, process.env.authToken);
 const db = require('../database/index');
+const port = process.env.SERVER_PORT || 3000;
 
 const {
   Students, Classes, Teachers, Comments,
