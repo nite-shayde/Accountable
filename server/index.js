@@ -224,7 +224,7 @@ app.post('/texts', (req) => {
   const { phone, message, numbers } = req.body;
   if (numbers) {
     Promise.all(
-      numbers.map(number => client.messages.create({
+      numbers.map(number => !number || client.messages.create({
         to: number,
         from: '+15042268038',
         body: message,
