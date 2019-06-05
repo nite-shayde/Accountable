@@ -128,7 +128,8 @@ app.get('/classes', (req, res) => {
     .then((classes) => {
       if (withStudents) {
         return Promise.all(
-          classes.map(clss => Students.findAll({ where: { classId: clss.id } })),
+          classes.map(clss => Students.findAll({ where: { classId: clss.id } })
+            .then(students => ({ name: clss.name, students }))),
         );
       }
       res.send(classes);

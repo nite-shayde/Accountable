@@ -196,9 +196,9 @@ class TeacherHome extends React.Component {
             <form action="/texts" method="post" onSubmit={this.sendMassText}>
               { this.state.allClasses.map(clss => (
                 <div>
-                  CLASS
-                  { clss.map(student => (
-                    <div>
+                  <h5>{ clss.name }</h5>
+                  { clss.students.map(student => (
+                    <div className="ml-2">
                       <input type="checkbox" name={student.id} value={student.phone} onClick={this.toggleNumber} />
                       {student.name}
                     </div>
