@@ -7,6 +7,11 @@ require('dotenv').config();
 const client = require('twilio')(process.env.accountSid, process.env.authToken);
 const db = require('../database/index');
 
+const {
+  Students, Classes, Teachers, Comments,
+} = db.models;
+
+
 const app = express();
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
@@ -113,13 +118,22 @@ app.get('/students', (req, res) => {
  */
 
 app.get('/classes', (req, res) => {
-  db.models.Classes.findAll({
-    where: {
-      teacherID: req.query.teacherID,
-    },
-  })
-    .then((response) => {
-      res.send(response);
+  const { teacherID, withStudents } = req.query;
+  let options = {};
+  if (teacherID) {
+    options = { where: { teacherID } };
+  }
+  Classes.findAll(options)
+    .then((classes) => {
+      if (withStudents) {
+        return Promise.all(
+          classes.map(clss => Students.findAll({ where: { classId: clss.id } })),
+        );
+      }
+      res.send(classes);
+      return null;
+    }).then((results) => {
+      if (results) res.send(results);
     })
     .catch((err) => {
       console.log('error querying database for classes', err);
@@ -206,10 +220,26 @@ app.post('/login', (req, res) => {
  */
 
 app.post('/texts', (req) => {
+  // Mass text
+  const { phone, message, numbers } = req.body;
+  if (numbers) {
+    Promise.all(
+      numbers.map(number => client.messages.create({
+        to: number,
+        from: '+15042268038',
+        body: message,
+      })),
+    ).then((messages) => {
+      console.log('Messages sent!');
+    })
+      .catch(err => console.error(err));
+    return;
+  }
+  // Single Text
   client.messages.create({
-    to: req.body.phone,
+    to: phone,
     from: '+15042268038',
-    body: req.body.message,
+    body: message,
   }).then((results) => {
     console.log(results);
   }).catch((err) => {

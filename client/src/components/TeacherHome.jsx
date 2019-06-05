@@ -19,6 +19,9 @@ class TeacherHome extends React.Component {
       inputState: '',
       renderInput: false,
       showMassTextModal: false,
+      allClasses: [],
+      studentNumbers: {},
+      massTextMessage: '',
     };
     this.getTeacherData = this.getTeacherData.bind(this);
     this.submitClass = this.submitClass.bind(this);
@@ -27,6 +30,9 @@ class TeacherHome extends React.Component {
     this.getClassData = this.getClassData.bind(this);
     this.renderClassInput = this.renderClassInput.bind(this);
     this.toggleMassTextModal = this.toggleMassTextModal.bind(this);
+    this.sendMassText = this.sendMassText.bind(this);
+    this.toggleNumber = this.toggleNumber.bind(this);
+    this.changeMassTextMessage = this.changeMassTextMessage.bind(this);
   }
 
 
@@ -48,6 +54,11 @@ class TeacherHome extends React.Component {
             });
           });
       });
+    // get all classes
+    axios.get('/classes', { params: { withStudents: true } }).then((response) => {
+      const classes = response.data;
+      this.setState({ allClasses: classes });
+    }).catch((err) => { console.log(err); });
   }
 
   getTeacherData() {
@@ -97,10 +108,6 @@ class TeacherHome extends React.Component {
     });
   }
 
-  toggleMassTextModal() {
-    this.setState({ showMassTextModal: !this.state.showMassTextModal });
-  }
-
   renderClassInput() {
     const { renderInput } = this.state;
     this.setState({
@@ -108,6 +115,31 @@ class TeacherHome extends React.Component {
     });
   }
 
+  // Accountable 2.0
+  sendMassText(e) {
+    e.preventDefault();
+    const { massTextMessage, studentNumbers } = this.state;
+    const body = { message: massTextMessage, numbers: Object.values(studentNumbers) };
+    axios.post('/texts', body);
+  }
+
+  changeMassTextMessage(e) {
+    this.setState({ massTextMessage: e.target.value });
+  }
+
+
+  toggleMassTextModal() {
+    this.setState({ showMassTextModal: !this.state.showMassTextModal });
+  }
+
+  toggleNumber(e) {
+    let { name, value } = e.target;
+    const { studentNumbers } = this.state;
+    console.log(e.target.value);
+    // this.state.studentNumbers[name] = value;
+    if (studentNumbers[name]) value = null;
+    this.setState({ studentNumbers: { ...studentNumbers, [name]: value } });
+  }
 
   render() {
     const { logout } = this.props;
@@ -161,7 +193,21 @@ class TeacherHome extends React.Component {
             MASS TEXT
           </ModalHeader>
           <ModalBody>
-            {/* {whichRendered} */}
+            <form action="/texts" method="post" onSubmit={this.sendMassText}>
+              { this.state.allClasses.map(clss => (
+                <div>
+                  CLASS
+                  { clss.map(student => (
+                    <div>
+                      <input type="checkbox" name={student.id} value={student.phone} onClick={this.toggleNumber} />
+                      {student.name}
+                    </div>
+                  )) }
+                </div>
+              )) }
+              <textarea name="text-message" onChange={this.changeMassTextMessage} />
+              <input type="submit" value="Submit" />
+            </form>
           </ModalBody>
           <ModalFooter>
             {/* <Button onClick={this.handleHide} className="btn btn-sm btn-dark">Close</Button> */}
@@ -171,5 +217,6 @@ class TeacherHome extends React.Component {
     );
   }
 }
+
 
 export default TeacherHome;
