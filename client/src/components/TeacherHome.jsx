@@ -1,6 +1,13 @@
 import React from 'react';
 import axios from 'axios';
+import Modal from 'react-bootstrap/Modal';
+import Button from 'react-bootstrap/Button';
+import ModalHeader from 'react-bootstrap/ModalHeader';
+import ModalTitle from 'react-bootstrap/ModalTitle';
+import ModalBody from 'react-bootstrap/ModalBody';
+import ModalFooter from 'react-bootstrap/ModalFooter';
 import Classes from './Classes.jsx';
+
 
 class TeacherHome extends React.Component {
   constructor(props) {
@@ -11,6 +18,7 @@ class TeacherHome extends React.Component {
       currentTeacherClasses: [],
       inputState: '',
       renderInput: false,
+      showMassTextModal: false,
     };
     this.getTeacherData = this.getTeacherData.bind(this);
     this.submitClass = this.submitClass.bind(this);
@@ -18,6 +26,7 @@ class TeacherHome extends React.Component {
     this.submitClassHandler = this.submitClassHandler.bind(this);
     this.getClassData = this.getClassData.bind(this);
     this.renderClassInput = this.renderClassInput.bind(this);
+    this.toggleMassTextModal = this.toggleMassTextModal.bind(this);
   }
 
 
@@ -88,12 +97,17 @@ class TeacherHome extends React.Component {
     });
   }
 
+  toggleMassTextModal() {
+    this.setState({ showMassTextModal: !this.state.showMassTextModal });
+  }
+
   renderClassInput() {
     const { renderInput } = this.state;
     this.setState({
       renderInput: !renderInput,
     });
   }
+
 
   render() {
     const { logout } = this.props;
@@ -119,6 +133,7 @@ class TeacherHome extends React.Component {
         <br />
         <div className="classes">
           <button type="submit" className="btn btn-dark btn-sm" onClick={this.renderClassInput}>Add Class</button>
+          <button type="submit" className="btn btn-dark btn-sm" onClick={this.toggleMassTextModal}>mass text</button>
           {renderInput
             ? (
               <div>
@@ -133,6 +148,25 @@ class TeacherHome extends React.Component {
             classList={currentTeacherClasses}
           />
         </div>
+        <Modal
+          show={this.state.showMassTextModal}
+          onHide={this.toggleMassTextModal}
+          dialogClassName="modal-90w"
+        >
+          <ModalHeader>
+            <ModalTitle id="title" />
+            {/* <Button className="btn btn-sm btn-dark" onClick={this.showHistory} id="history">View Comment History</Button>
+
+            <Button className="btn btn-sm btn-dark" onClick={this.newComment} id="newComment">Leave a Comment</Button> */}
+            MASS TEXT
+          </ModalHeader>
+          <ModalBody>
+            {/* {whichRendered} */}
+          </ModalBody>
+          <ModalFooter>
+            {/* <Button onClick={this.handleHide} className="btn btn-sm btn-dark">Close</Button> */}
+          </ModalFooter>
+        </Modal>
       </div>
     );
   }

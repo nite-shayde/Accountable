@@ -4,7 +4,7 @@ const port = 3000;
 const path = require('path');
 const bodyParser = require('body-parser');
 require('dotenv').config();
-// const client = require('twilio')(process.env.accountSid, process.env.authToken);
+const client = require('twilio')(process.env.accountSid, process.env.authToken);
 const db = require('../database/index');
 
 const app = express();
@@ -208,8 +208,12 @@ app.post('/login', (req, res) => {
 app.post('/texts', (req) => {
   client.messages.create({
     to: req.body.phone,
-    from: '+15045968529',
+    from: '+15042268038',
     body: req.body.message,
+  }).then((results) => {
+    console.log(results);
+  }).catch((err) => {
+    console.error(err);
   });
 });
 
