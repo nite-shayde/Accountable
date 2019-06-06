@@ -38,7 +38,7 @@ class Students extends React.Component {
 
     return axios.get('/students', {
       params: {
-        classID: classID,
+        classID,
       },
     });
   }
@@ -61,7 +61,7 @@ class Students extends React.Component {
       parentName,
       email: parentEmail,
       phone: parentPhone,
-      classID: classID,
+      classID,
     });
   }
 

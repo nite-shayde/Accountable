@@ -23,6 +23,8 @@ class TeacherHome extends React.Component {
       studentNumbers: {},
       massTextMessage: '',
       students: [],
+      confirmMessage: '',
+      formDisabled: false,
     };
     this.getTeacherData = this.getTeacherData.bind(this);
     this.submitClass = this.submitClass.bind(this);
@@ -131,9 +133,14 @@ class TeacherHome extends React.Component {
   sendMassText(e) {
     e.preventDefault();
     const { massTextMessage, studentNumbers } = this.state;
+    this.setState({ formDisabled: true });
     const body = { message: massTextMessage, numbers: Object.values(studentNumbers) };
-    axios.post('/texts', body);
+    axios.post('/texts', body).then(() => {
+      this.setState({ confirmMessage: 'message sent!', formDisabled: false });
+    });
+    this.setState({ massTextMessage: '' });
   }
+
 
   changeMassTextMessage(e) {
     this.setState({ massTextMessage: e.target.value });
@@ -147,8 +154,6 @@ class TeacherHome extends React.Component {
   toggleNumber(e) {
     let { name, value } = e.target;
     const { studentNumbers } = this.state;
-    console.log(e.target.value);
-    // this.state.studentNumbers[name] = value;
     if (studentNumbers[name]) value = null;
     this.setState({ studentNumbers: { ...studentNumbers, [name]: value } });
   }
@@ -156,6 +161,9 @@ class TeacherHome extends React.Component {
   render() {
     const { logout } = this.props;
     console.log(this.state.students);
+    const {
+      massTextMessage, showMassTextModal, confirmMessage, formDisabled,
+    } = this.state;
 
     const {
       currentTeacherName, renderInput, currentTeacherId, currentTeacherClasses, students,
@@ -202,7 +210,7 @@ class TeacherHome extends React.Component {
           </select>
         </div>
         <Modal
-          show={this.state.showMassTextModal}
+          show={showMassTextModal}
           onHide={this.toggleMassTextModal}
           dialogClassName="modal-90w"
         >
@@ -211,27 +219,32 @@ class TeacherHome extends React.Component {
             {/* <Button className="btn btn-sm btn-dark" onClick={this.showHistory} id="history">View Comment History</Button>
 
             <Button className="btn btn-sm btn-dark" onClick={this.newComment} id="newComment">Leave a Comment</Button> */}
-            MASS TEXT
+            <h4>Mass Text</h4>
           </ModalHeader>
           <ModalBody>
             <form action="/texts" method="post" onSubmit={this.sendMassText}>
-              { this.state.allClasses.map(clss => (
-                <div>
-                  <h5>{ clss.name }</h5>
-                  { clss.students.map(student => (
-                    <div className="ml-2">
-                      <input type="checkbox" name={student.id} value={student.phone} onClick={this.toggleNumber} />
-                      {student.name}
-                    </div>
-                  )) }
-                </div>
-              )) }
-              <textarea name="text-message" onChange={this.changeMassTextMessage} />
-              <input type="submit" value="Submit" />
+              <fieldset disabled={formDisabled}>
+                { this.state.allClasses.map(clss => (
+                  <div>
+                    <h5>{ clss.name }</h5>
+                    { clss.students.map(student => (
+                      <div className="ml-2">
+                        <input type="checkbox" name={student.id} value={student.phone} onClick={this.toggleNumber} />
+                        {student.name}
+                      </div>
+                    )) }
+                  </div>
+                )) }
+                <textarea name="text-message" value={massTextMessage} onChange={this.changeMassTextMessage} />
+                <input type="submit" value="Submit" />
+              </fieldset>
             </form>
+            <div className="text-success">
+              <h5>{confirmMessage}</h5>
+            </div>
           </ModalBody>
           <ModalFooter>
-            {/* <Button onClick={this.handleHide} className="btn btn-sm btn-dark">Close</Button> */}
+            <Button onClick={this.handleHide} className="btn btn-sm btn-dark">Close</Button>
           </ModalFooter>
         </Modal>
       </div>
