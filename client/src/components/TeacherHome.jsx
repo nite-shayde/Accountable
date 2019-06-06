@@ -194,13 +194,13 @@ class TeacherHome extends React.Component {
             classList={currentTeacherClasses}
           />
         </div>
-        { students.map(student => (
-          <div className="select box">
-            <select>
+        <div className="select box">
+          <select>
+            { students.map(student => (
               <option value="students">{student.name}</option>
-            </select>
-          </div>
-        )) }
+            )) }
+          </select>
+        </div>
         <Modal
           show={this.state.showMassTextModal}
           onHide={this.toggleMassTextModal}
