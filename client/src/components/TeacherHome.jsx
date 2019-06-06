@@ -209,6 +209,7 @@ class TeacherHome extends React.Component {
             )) }
           </select>
         </div>
+        {/** MASS TEXT MODAL */}
         <Modal
           show={showMassTextModal}
           onHide={this.toggleMassTextModal}

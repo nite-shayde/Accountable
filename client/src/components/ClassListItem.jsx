@@ -38,14 +38,14 @@ class ClassListItem extends React.Component {
   showClassListItems() {
     const htmlCollection = document.getElementsByClassName('something-else');
     const arrayCollection = Array.from(htmlCollection);
-    arrayCollection.forEach(element => {
+    arrayCollection.forEach((element) => {
       element.style.display = 'block';
     });
   }
 
   render() {
     const { studentRender } = this.state;
-    const { eachClass } = this.props;
+    const { eachClass, teacherName } = this.props;
     return (
       <div>
         <ul className="studentList">
@@ -59,6 +59,7 @@ class ClassListItem extends React.Component {
                 changeState={this.changeStudentState}
                 className={eachClass.name}
                 classID={eachClass.id}
+                teacherName={teacherName}
               />
             ) : null}
         </ul>
