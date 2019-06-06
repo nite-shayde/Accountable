@@ -222,7 +222,7 @@ app.post('/login', (req, res) => {
  * @param {function} - express callback function
  */
 
-app.post('/texts', (req) => {
+app.post('/texts', (req, res) => {
   // Mass text
   const { phone, message, numbers } = req.body;
   if (numbers) {
@@ -234,8 +234,12 @@ app.post('/texts', (req) => {
       })),
     ).then((messages) => {
       console.log('Messages sent!');
+      res.sendStatus(201);
     })
-      .catch(err => console.error(err));
+      .catch((err) => {
+        console.error(err);
+        res.sendStatus(500);
+      });
     return;
   }
   // Single Text
