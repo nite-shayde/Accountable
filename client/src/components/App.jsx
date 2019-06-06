@@ -5,6 +5,7 @@ import axios from 'axios';
 import { auth, provider } from '../firebaseConfig.js';
 import TeacherHome from './TeacherHome.jsx';
 import '../../styles/styles.css';
+import '../../styles/bootstrap.min.css';
 
 class App extends Component {
   constructor(props) {
