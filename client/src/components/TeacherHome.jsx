@@ -22,6 +22,7 @@ class TeacherHome extends React.Component {
       allClasses: [],
       studentNumbers: {},
       massTextMessage: '',
+      students: [],
     };
     this.getTeacherData = this.getTeacherData.bind(this);
     this.submitClass = this.submitClass.bind(this);
@@ -59,6 +60,17 @@ class TeacherHome extends React.Component {
       const classes = response.data;
       this.setState({ allClasses: classes });
     }).catch((err) => { console.log(err); });
+
+    // get all students
+    axios.get('/students')
+      .then((response) => {
+        const students = response.data;
+        this.setState({ students });
+        console.log(this.state.students);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
   }
 
   getTeacherData() {
@@ -143,8 +155,10 @@ class TeacherHome extends React.Component {
 
   render() {
     const { logout } = this.props;
+    console.log(this.state.students);
+
     const {
-      currentTeacherName, renderInput, currentTeacherId, currentTeacherClasses,
+      currentTeacherName, renderInput, currentTeacherId, currentTeacherClasses, students,
     } = this.state;
     return (
       <div>
@@ -179,6 +193,13 @@ class TeacherHome extends React.Component {
             teacherName={currentTeacherName}
             classList={currentTeacherClasses}
           />
+        </div>
+        <div className="select box">
+          <select>
+            { students.map(student => (
+              <option value="students">{student.name}</option>
+            )) }
+          </select>
         </div>
         <Modal
           show={this.state.showMassTextModal}
