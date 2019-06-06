@@ -4,6 +4,8 @@ const path = require('path');
 const bodyParser = require('body-parser');
 require('dotenv').config();
 const client = require('twilio')(process.env.accountSid, process.env.authToken);
+const { MessagingResponse } = require('twilio').twiml;
+const http = require('http');
 const db = require('../database/index');
 
 const port = process.env.SERVER_PORT || 3000;
@@ -248,6 +250,26 @@ app.post('/texts', (req) => {
   }).catch((err) => {
     console.error(err);
   });
+});
+
+/**
+ * POST request handler that will recieve the incoming text
+ * from twilio
+ * ::To run locally use command, ngrok http 1337
+ */
+
+app.post('/sms', (req, res) => {
+  // debugger;
+  const msg = req.body;
+  console.log({ msg: msg.Body, to: msg.To, from: msg.From });
+  const twiml = new MessagingResponse();
+  twiml.message('Recieved');
+  res.writeHead(200, { 'Content-Type': 'text/xml' });
+  res.end(twiml.toString());
+});
+
+http.createServer(app).listen(1337, () => {
+  console.log('Express server listening on port 3000');
 });
 
 app.listen(port, () => console.log(`Our app listening on port ${port}!`));
