@@ -96,11 +96,12 @@ app.post('/comments', (req, res) => {
  */
 
 app.get('/students', (req, res) => {
-  db.models.Students.findAll({
-    where: {
-      classID: req.query.classID,
-    },
-  })
+  const { classID } = req.query;
+  let matches = {};
+  if (classID) {
+    matches = { where: { classID } };
+  }
+  Students.findAll(matches)
     .then((response) => {
       res.send(response);
     })
