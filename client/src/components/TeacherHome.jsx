@@ -197,9 +197,7 @@ class TeacherHome extends React.Component {
         { students.map(student => (
           <div className="select box">
             <select>
-              <option value="grapefruit">{student.name}</option>
-              <option value="lime">students.name</option>
-              <option value="mango">Select Student</option>
+              <option value="students">{student.name}</option>
             </select>
           </div>
         )) }
