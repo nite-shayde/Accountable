@@ -1,6 +1,7 @@
 import React from 'react';
 import axios from 'axios';
 import Modal from 'react-bootstrap/Modal';
+import StudentModal from './Modal.jsx';
 import Button from 'react-bootstrap/Button';
 import ModalHeader from 'react-bootstrap/ModalHeader';
 import ModalTitle from 'react-bootstrap/ModalTitle';
@@ -34,6 +35,7 @@ class TeacherHome extends React.Component {
     this.sendMassText = this.sendMassText.bind(this);
     this.toggleNumber = this.toggleNumber.bind(this);
     this.changeMassTextMessage = this.changeMassTextMessage.bind(this);
+    this.studentInfo = this.studentInfo.bind(this);
   }
 
 
@@ -153,6 +155,11 @@ class TeacherHome extends React.Component {
     this.setState({ studentNumbers: { ...studentNumbers, [name]: value } });
   }
 
+  studentInfo() {
+    console.log('student is clicked');
+  }
+
+
   render() {
     const { logout } = this.props;
     console.log(this.state.students);
@@ -195,11 +202,13 @@ class TeacherHome extends React.Component {
           />
         </div>
         <div className="select box">
-          <select>
+          {/* <select onChange={this.studentInfo}> */}
+          {/* <option value="title">Select Student</option> */}
             { students.map(student => (
-              <option value="students">{student.name}</option>
+            <StudentModal currentStudent={student} name={student.name} />
+              // <option value="student">{student.name}</option>
             )) }
-          </select>
+          {/* </select> */}
         </div>
         <Modal
           show={this.state.showMassTextModal}
@@ -211,7 +220,7 @@ class TeacherHome extends React.Component {
             {/* <Button className="btn btn-sm btn-dark" onClick={this.showHistory} id="history">View Comment History</Button>
 
             <Button className="btn btn-sm btn-dark" onClick={this.newComment} id="newComment">Leave a Comment</Button> */}
-            MASS TEXT
+            MASS TEXT 
           </ModalHeader>
           <ModalBody>
             <form action="/texts" method="post" onSubmit={this.sendMassText}>

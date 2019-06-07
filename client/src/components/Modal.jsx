@@ -15,7 +15,7 @@ class CommentModal extends React.Component {
     super(props, context);
     this.state = {
       show: false,
-      history: false,
+      history: true,
       newComment: false,
       commentText: '',
       comments: [],
