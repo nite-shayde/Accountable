@@ -208,34 +208,29 @@ class TeacherHome extends React.Component {
       <div className="">
         <div className="sidebar d-flex flex-column p-3 flex-grow-0">
 
-          <div className="d-flex justify-content-end"><button type="submit" className="btn btn-sm btn-dark" id="" onClick={logout}>Log Out</button></div>
           <div className="">
-            <h3>Welcome back</h3>
-            <h4>{currentTeacherName}</h4>
+            <h5 className="text-info">{`${currentTeacherName}`}</h5>
+            {/* <h3 className="mt-1"></h3> */}
           </div>
           <div>
-            <button type="submit" className="btn btn-success mb-3" onClick={this.renderClassInput}>Add Class</button>
-            {renderInput
-              ? (
-                <div>
-                  <input placeholder="new class name" onChange={this.changeInputState} />
-                  <button type="submit" className="btn btn-primary btn-sm mb-4" onClick={this.submitClassHandler}>Submit</button>
-                </div>
-              )
-              : null }
+            <img className="img-fluid" src="http://icons.iconarchive.com/icons/goodstuff-no-nonsense/free-space/1024/earth-icon.png" alt="space and beyond" />
           </div>
-          <div>
-            <button type="submit" className="btn btn-success" onClick={this.toggleMassTextModal}>mass text</button>
-          </div>
-          <h3>Students</h3>
-          <div className="vertical-scroll d-flex flex-column">
-            {/* <select onChange={this.studentInfo}> */}
-            {/* <option value="title">Select Student</option> */}
-            { students.map(student => (
-              <StudentModal currentStudent={student} name={student.name} teacherName={currentTeacherName} />
-            // <option value="student">{student.name}</option>
-            )) }
-            {/* </select> */}
+          <div className="card">
+            <div className="card-header card-header-tabs card-header-primary">
+              Students
+            </div>
+            <div className="card-body">
+              <div className="vertical-scroll d-flex flex-column p-2 bg-light border">
+                { students.map(student => (
+                  <StudentModal currentStudent={student} name={student.name} teacherName={currentTeacherName} />
+                )) }
+              </div>
+            </div>
+
+            <div className="card-footer">
+              <button type="submit" className="btn btn-success" onClick={this.toggleMassTextModal}>mass text</button>
+            </div>
+
           </div>
 
         </div>
@@ -243,9 +238,19 @@ class TeacherHome extends React.Component {
         <div className="main-panel">
           <div className="shadow rounded mt-3 bg-light py-3 px-5 mb-3">
             <div className="header d-flex flex-column">
-              <h1 className="text-primary">Accountable</h1>
+              <div className="d-flex flex-row justify-content-between">
+                <h1 className="text-primary">Accountable</h1>
+                <div><button type="submit" className="btn btn-sm btn-dark" id="" onClick={logout}>Log Out</button></div>
+              </div>
               <div id="quote" className="font-italic d-flex justify-content-center">If you want to make an apple pie from scratch, you must first create the universe.</div>
               <h6 className="d-flex justify-content-center">- Carl Sagan</h6>
+            </div>
+          </div>
+
+          <div>
+            <div className="d-flex flex-row mb-4">
+              <input placeholder="new class name" onChange={this.changeInputState} />
+              <button type="submit" className="btn btn-success btn-sm" onClick={this.submitClassHandler}>add class</button>
             </div>
           </div>
 
@@ -256,6 +261,7 @@ class TeacherHome extends React.Component {
               classList={currentTeacherClasses}
             />
           </div>
+
           {/** MASS TEXT MODAL */}
           <Modal
             show={showMassTextModal}
@@ -264,9 +270,6 @@ class TeacherHome extends React.Component {
           >
             <ModalHeader>
               <ModalTitle id="title" />
-              {/* <Button className="btn btn-sm btn-dark" onClick={this.showHistory} id="history">View Comment History</Button>
-
-            <Button className="btn btn-sm btn-dark" onClick={this.newComment} id="newComment">Leave a Comment</Button> */}
               <h3>Mass Text</h3>
             </ModalHeader>
             <ModalBody>

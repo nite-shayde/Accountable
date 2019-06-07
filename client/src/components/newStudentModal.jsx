@@ -44,11 +44,11 @@ class StudentModal extends React.Component {
       parentName: Guardian,
       email: Email,
       phone: Phone,
-      classID: classID,
+      classID,
     })
       .then(() => axios.get('/students', {
         params: {
-          classID: classID,
+          classID,
         },
       })
         .then((data) => {
@@ -76,7 +76,7 @@ class StudentModal extends React.Component {
     } = this.state;
     return (
       <div>
-        <Button id="addButt" variant="dark" onClick={this.handleShow} className="btn btn-sm">
+        <Button id="addButt" variant="dark" onClick={this.handleShow} className="btn btn-success">
             Add A Student
         </Button>
         <Modal

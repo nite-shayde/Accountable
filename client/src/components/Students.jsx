@@ -127,38 +127,30 @@ class Students extends React.Component {
     const { students } = this.state;
     return (
       <div>
-        <div className="studentListTitle">
-          <h4>
-            Students in
-            {className}
-          </h4>
-        </div>
-        <div className="addStudentContainer">
+        <button type="submit" onClick={() => { changeState(); showList(); }} className="btn btn-sm">Back</button>
+        <div className="d-flex flex-row justify-content-between align-items-center">
+          <h3>{className}</h3>
           <StudentModal studentChange={this.changeStudentState} classID={classID} />
-        </div>
-        <div className="backButt">
-          <button type="submit" onClick={() => { changeState(); showList(); }} className="btn btn-sm">Back</button>
         </div>
         <div className="studentListDiv">
           <table className="table table-hover table-sm table-condensed">
-            <thead className="thead-dark">
+            <thead className="bg-secondary text-white">
               <tr>
                 <th className="tableName">Name</th>
                 <th className="tableGuardian">Guardian</th>
                 <th className="tablePhone">Phone</th>
                 <th className="tableEmail">Email</th>
-                <th className="tableComments">Comments</th>
+                {/* <th className="tableComments">Comments</th> */}
               </tr>
             </thead>
             <tbody>
               {
                 students.map(student => (
                   <tr key={student.id} className="student-row">
-                    <td>{student.name || 'N/A'}</td>
+                    <td><Modal currentStudent={student} name={student.name} teacherName={teacherName} /></td>
                     <td>{student.parentName || 'no parent name'}</td>
                     <td>{student.phone || 'no phone number'}</td>
                     <td>{student.email || 'no email'}</td>
-                    <Modal currentStudent={student} name={student.name} teacherName={teacherName} />
                   </tr>
                 ))
               }
