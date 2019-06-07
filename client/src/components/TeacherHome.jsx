@@ -1,12 +1,12 @@
 import React from 'react';
 import axios from 'axios';
 import Modal from 'react-bootstrap/Modal';
-import StudentModal from './Modal.jsx';
 import Button from 'react-bootstrap/Button';
 import ModalHeader from 'react-bootstrap/ModalHeader';
 import ModalTitle from 'react-bootstrap/ModalTitle';
 import ModalBody from 'react-bootstrap/ModalBody';
 import ModalFooter from 'react-bootstrap/ModalFooter';
+import StudentModal from './Modal.jsx';
 import Classes from './Classes.jsx';
 
 
@@ -212,10 +212,10 @@ class TeacherHome extends React.Component {
         <div className="select box">
           {/* <select onChange={this.studentInfo}> */}
           {/* <option value="title">Select Student</option> */}
-            { students.map(student => (
-            <StudentModal currentStudent={student} name={student.name} />
+          { students.map(student => (
+            <StudentModal currentStudent={student} name={student.name} teacherName={currentTeacherName} />
               // <option value="student">{student.name}</option>
-            )) }
+          )) }
           {/* </select> */}
         </div>
         {/** MASS TEXT MODAL */}
