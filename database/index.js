@@ -50,6 +50,10 @@ const Teachers = sequelize.define('teacher', {
   email: {
     type: Sequelize.STRING,
   },
+  number: {
+    type: Sequelize.STRING,
+    default: '+15042268038',
+  },
 });
 
 /**
@@ -108,10 +112,10 @@ const Comments = sequelize.define('comment', {
 });
 
 const Messages = sequelize.define('messages', {
-  // convoID: {
-  //   type: Sequelize.INTEGER,
-  //   references: { model: 'convos', key: 'id' },
-  // },
+  convoID: {
+    type: Sequelize.INTEGER,
+    references: { model: 'convos', key: 'id' },
+  },
   incoming: {
     type: Sequelize.BOOLEAN,
   },
@@ -127,16 +131,16 @@ const Messages = sequelize.define('messages', {
  * Convos is sequelize model that connects the students, teachers, and messages
  */
 
-// const Convos = sequelize.define('convos', {
-//   teacherID: {
-//     type: Sequelize.INTEGER,
-//     references: { model: 'teachers', key: 'id' },
-//   },
-//   guardianNum: {
-//     type: Sequelize.STRING,
-//     references: { model: 'students', key: 'phone' },
-//   },
-// });
+const Convos = sequelize.define('convos', {
+  teacherNumber: {
+    type: Sequelize.INTEGER,
+    references: { model: 'teachers', key: 'id' },
+  },
+  parentNumber: {
+    type: Sequelize.STRING,
+    references: { model: 'students', key: 'phone' },
+  },
+});
 
 
 sequelize.sync().then(() => {

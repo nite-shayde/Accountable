@@ -1,14 +1,16 @@
 import React from 'react';
 import axios from 'axios';
+import { text } from 'body-parser';
 
 class CommentHistory extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
       comments: [],
+      textHistory: [],
     };
-
     this.getComments = this.getComments.bind(this);
+    this.getTextHistory = this.getTextHistory.bind(this);
   }
 
   componentDidMount() {
@@ -19,10 +21,16 @@ class CommentHistory extends React.Component {
           comments: data.data,
         });
       });
+    this.getTextHistory()
+      .then((data) => {
+        this.setState({
+          textHistory: data.data,
+        });
+      });
   }
 
   getComments() {
-      const { student } = this.props;
+    const { student } = this.props;
     return axios.get('/comments', {
       params: {
         studentID: student.id,
@@ -30,6 +38,13 @@ class CommentHistory extends React.Component {
     });
   }
 
+  // eslint-disable-next-line class-methods-use-this
+  getTextHistory() {
+    return axios.get('/sms', text)
+      .then((results) => {
+        console.log(results);
+      });
+  }
 
   render() {
     return (
@@ -49,7 +64,6 @@ class CommentHistory extends React.Component {
                                 <td>{comment.comment}</td>
                             </tr>
                       );
-
                     })}
                 </table>
             </div>

@@ -4,14 +4,14 @@ const path = require('path');
 const bodyParser = require('body-parser');
 require('dotenv').config();
 const client = require('twilio')(process.env.accountSid, process.env.authToken);
-const { MessagingResponse } = require('twilio').twiml;
+// const { MessagingResponse } = require('twilio').twiml;
 const http = require('http');
 const db = require('../database/index');
 
 const port = process.env.SERVER_PORT || 3000;
 
 const {
-  Students, Classes, Teachers, Comments,
+  Students, Classes, Teachers, Comments, Messages,
 } = db.models;
 
 
@@ -236,9 +236,6 @@ app.post('/texts', (req, res) => {
       })),
     ).then((messages) => {
       console.log(messages);
-      // db.models.Messages.create({
-
-      // });
       console.log('Messages sent!');
       res.sendStatus(201);
     })
@@ -268,7 +265,7 @@ app.post('/texts', (req, res) => {
 
 /**
  * POST request handler that will recieve the incoming text
- * from twilio
+ * from twilio. Twilio's response service is commentted out
  * ::To run locally use command, ngrok http 1337
  */
 
@@ -285,6 +282,15 @@ app.post('/sms', (req, res) => {
   // twiml.message('Good Job');
   res.writeHead(200, { 'Content-Type': 'text/xml' });
   // res.end(twiml.toString());
+});
+
+app.get('/sms', (req, res) => {
+  db.models.Messages.findAll({
+  }).then((data) => {
+    res.send(data);
+  }).catch((err) => {
+    console.log(err);
+  });
 });
 
 http.createServer(app).listen(1337, () => {
