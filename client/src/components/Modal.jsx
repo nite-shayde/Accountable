@@ -57,14 +57,17 @@ class CommentModal extends React.Component {
 
   sendText() {
     const { textMessageText } = this.state;
-    const { currentStudent } = this.props;
+    const { currentStudent, teacherName } = this.props;
     // make post request to server
+    let body = `From: ${teacherName}\nTo: ${currentStudent.parentName}\n\nMsg: ${textMessageText}`;
+    body += '\n\n*Note: if responding, please indicate who your message is to.';
+
     let phone = currentStudent.phone.replace(/-/g, '');
     phone = `+1${phone}`;
 
     axios.post('/texts', {
       phone,
-      message: textMessageText,
+      message: body,
     });
 
     this.setState({
@@ -174,7 +177,8 @@ class CommentModal extends React.Component {
     return (
       <>
         <Button variant="dark" onClick={this.handleShow} className="btn btn-sm">
-          {name}'s Comments
+          {name}
+'s Comments
         </Button>
         <Modal
           show={show}

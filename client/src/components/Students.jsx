@@ -121,7 +121,7 @@ class Students extends React.Component {
 
   render() {
     const {
-      className, classID, changeState, showList,
+      className, classID, changeState, showList, teacherName,
     } = this.props;
 
     const { students } = this.state;
@@ -158,7 +158,7 @@ class Students extends React.Component {
                     <td>{student.parentName || 'no parent name'}</td>
                     <td>{student.phone || 'no phone number'}</td>
                     <td>{student.email || 'no email'}</td>
-                    <Modal currentStudent={student} name={student.name} />
+                    <Modal currentStudent={student} name={student.name} teacherName={teacherName} />
                   </tr>
                 ))
               }
