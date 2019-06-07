@@ -193,7 +193,6 @@ class CommentModal extends React.Component {
       <>
         <Button variant="dark" onClick={this.handleShow} className="btn btn-sm">
           {name}
-'s Comments
         </Button>
         <Modal
           show={show}
