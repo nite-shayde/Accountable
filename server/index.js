@@ -224,7 +224,7 @@ app.post('/login', (req, res) => {
  * @param {function} - express callback function
  */
 
-app.post('/texts', (req) => {
+app.post('/texts', (req, res) => {
   // Mass text
   const { phone, message, numbers } = req.body;
   if (numbers) {
@@ -235,9 +235,17 @@ app.post('/texts', (req) => {
         body: message,
       })),
     ).then((messages) => {
+      console.log(messages);
+      // db.models.Messages.create({
+
+      // });
       console.log('Messages sent!');
+      res.sendStatus(201);
     })
-      .catch(err => console.error(err));
+      .catch((err) => {
+        console.error(err);
+        res.sendStatus(500);
+      });
     return;
   }
   // Single Text
@@ -246,6 +254,12 @@ app.post('/texts', (req) => {
     from: '+15042268038',
     body: message,
   }).then((results) => {
+    // creating the message in the database
+    db.models.Messages.create({
+      incoming: false,
+      body: results.body,
+      phoneNumber: results.from,
+    });
     console.log(results);
   }).catch((err) => {
     console.error(err);
@@ -261,11 +275,16 @@ app.post('/texts', (req) => {
 app.post('/sms', (req, res) => {
   // debugger;
   const msg = req.body;
-  console.log({ msg: msg.Body, to: msg.To, from: msg.From });
-  const twiml = new MessagingResponse();
-  twiml.message('Recieved');
+  // console.log({ msg: msg.Body, to: msg.To, from: msg.From });
+  db.models.Messages.create({
+    incoming: true,
+    body: msg.Body,
+    phoneNumber: msg.From,
+  });
+  // const twiml = new MessagingResponse();
+  // twiml.message('Good Job');
   res.writeHead(200, { 'Content-Type': 'text/xml' });
-  res.end(twiml.toString());
+  // res.end(twiml.toString());
 });
 
 http.createServer(app).listen(1337, () => {

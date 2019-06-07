@@ -107,6 +107,37 @@ const Comments = sequelize.define('comment', {
   },
 });
 
+const Messages = sequelize.define('messages', {
+  // convoID: {
+  //   type: Sequelize.INTEGER,
+  //   references: { model: 'convos', key: 'id' },
+  // },
+  incoming: {
+    type: Sequelize.BOOLEAN,
+  },
+  body: {
+    type: Sequelize.STRING,
+  },
+  phoneNumber: {
+    type: Sequelize.STRING,
+  },
+});
+
+/**
+ * Convos is sequelize model that connects the students, teachers, and messages
+ */
+
+// const Convos = sequelize.define('convos', {
+//   teacherID: {
+//     type: Sequelize.INTEGER,
+//     references: { model: 'teachers', key: 'id' },
+//   },
+//   guardianNum: {
+//     type: Sequelize.STRING,
+//     references: { model: 'students', key: 'phone' },
+//   },
+// });
+
 
 sequelize.sync().then(() => {
   Teachers.create({ name: 'jesse', email: 'jesse@jesse.com' });
@@ -121,6 +152,8 @@ module.exports.models = {
   Classes,
   Students,
   Comments,
+  // Convos,
+  Messages,
 };
 
 
