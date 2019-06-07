@@ -227,6 +227,17 @@ class TeacherHome extends React.Component {
           <div>
             <button type="submit" className="btn btn-success" onClick={this.toggleMassTextModal}>mass text</button>
           </div>
+          <h3>Students</h3>
+          <div className="vertical-scroll d-flex flex-column">
+            {/* <select onChange={this.studentInfo}> */}
+            {/* <option value="title">Select Student</option> */}
+            { students.map(student => (
+              <StudentModal currentStudent={student} name={student.name} teacherName={currentTeacherName} />
+            // <option value="student">{student.name}</option>
+            )) }
+            {/* </select> */}
+          </div>
+
         </div>
 
         <div className="main-panel">
@@ -244,15 +255,6 @@ class TeacherHome extends React.Component {
               teacherName={currentTeacherName}
               classList={currentTeacherClasses}
             />
-          </div>
-          <div className="select box">
-            {/* <select onChange={this.studentInfo}> */}
-            {/* <option value="title">Select Student</option> */}
-            { students.map(student => (
-              <StudentModal currentStudent={student} name={student.name} teacherName={currentTeacherName} />
-            // <option value="student">{student.name}</option>
-            )) }
-            {/* </select> */}
           </div>
           {/** MASS TEXT MODAL */}
           <Modal
