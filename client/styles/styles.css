@@ -1,8 +1,41 @@
 /* @import url('https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css'); */
 
 
+
+
+
+/*
 body {
-    font-family: 'Open Sans', sans-serif;
+    font-family: "Adobe Caslon Pro", "Hoefler Text", Georgia, Garamond, Times, serif;
+}
+
+#quote:first-letter{
+    text-transform: uppercase;
+}
+
+#quote {
+    color: #424242;
+    font-family: "Adobe Caslon Pro", "Hoefler Text", Georgia, Garamond, Times, serif;
+    letter-spacing:0.1em;
+    text-align:center;
+    text-transform: lowercase;
+    line-height: 145%;
+    font-size: 18pt;
+    font-variant: small-caps;
+    word-break: break-all;
+    margin-left: 45px;
+    margin-top: 30px
+    }
+
+#quoteauthor {
+    color: #424242;
+    font-family: "Adobe Caslon Pro", "Hoefler Text", Georgia, Garamond, Times, serif;
+    letter-spacing:0.1em;
+    text-align:center;
+    line-height: 110%;
+    font-size: 18pt;
+    margin-top: 75px;
+    margin-left: -75px;
 }
 
 .title { 
@@ -163,41 +196,13 @@ body {
     }
 
     .logincontainer h3 {
-        /* font-style: italic; */
         font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
         color: linen;
         margin-left: 75px;
         margin-top: 25px;
     }
 
-    #quote:first-letter{
-        text-transform: uppercase;
-    }
-
-    #quote {
-        color: #424242;
-        font-family: "Adobe Caslon Pro", "Hoefler Text", Georgia, Garamond, Times, serif;
-        letter-spacing:0.1em;
-        text-align:center;
-        text-transform: lowercase;
-        line-height: 145%;
-        font-size: 18pt;
-        font-variant: small-caps;
-        word-break: break-all;
-        margin-left: 45px;
-        margin-top: 30px
-        }
-
-    #quoteauthor {
-        color: #424242;
-        font-family: "Adobe Caslon Pro", "Hoefler Text", Georgia, Garamond, Times, serif;
-        letter-spacing:0.1em;
-        text-align:center;
-        line-height: 110%;
-        font-size: 18pt;
-        margin-top: 75px;
-        margin-left: -75px;
-    }
+  
 
     #logoutButt {
         height: 30px;
@@ -226,3 +231,4 @@ body {
         width: 200px;
     }
 
+    */
