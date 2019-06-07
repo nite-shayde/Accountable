@@ -1,3 +1,5 @@
+/* eslint-disable class-methods-use-this */
+/* eslint-disable no-console */
 import React from 'react';
 import axios from 'axios';
 import Modal from 'react-bootstrap/Modal';
@@ -38,6 +40,7 @@ class TeacherHome extends React.Component {
     this.toggleNumber = this.toggleNumber.bind(this);
     this.changeMassTextMessage = this.changeMassTextMessage.bind(this);
     this.studentInfo = this.studentInfo.bind(this);
+    this.selectAll = this.selectAll.bind(this);
   }
 
 
@@ -155,25 +158,50 @@ class TeacherHome extends React.Component {
 
   toggleNumber(e) {
     let { name, value } = e.target;
-    const { studentNumbers } = this.state;
-    if (studentNumbers[name]) value = null;
-    this.setState({ studentNumbers: { ...studentNumbers, [name]: value } });
+    console.log(name);
+    this.setState((prevState) => {
+      const { studentNumbers } = prevState;
+      if (studentNumbers[name]) value = null;
+      return { studentNumbers: { ...studentNumbers, [name]: value } };
+    });
   }
 
   studentInfo() {
     console.log('student is clicked');
   }
 
+  selectAll(e) {
+    // const button = e.target;
+    // let select = true;
+    // // if (button.innerText === 'SELECT ALL') {
+    // if (!button.checked) {
+    //   // button.innerText = 'DESELECT ALL';
+    //   select = false;
+    // }
+    // else {
+    //   button.innerText = 'SELECT ALL';
+    //   select = false;
+    // }
+    const button = e.target;
+    const { checked } = button;
+    [...button.parentElement.elements].forEach((elem) => {
+      const click = (!elem.checked && button.checked) || (elem.checked && !button.checked);
+      if (elem.type === 'checkbox' && click && elem !== button) {
+        elem.click();
+      }
+    });
+  }
+
 
   render() {
     const { logout } = this.props;
-    console.log(this.state.students);
+    // console.log(this.state.students);
     const {
       massTextMessage, showMassTextModal, confirmMessage, formDisabled,
     } = this.state;
 
     const {
-      currentTeacherName, renderInput, currentTeacherId, currentTeacherClasses, students,
+      currentTeacherName, renderInput, currentTeacherId, currentTeacherClasses, students, allClasses,
     } = this.state;
     return (
       <div>
@@ -214,7 +242,7 @@ class TeacherHome extends React.Component {
           {/* <option value="title">Select Student</option> */}
           { students.map(student => (
             <StudentModal currentStudent={student} name={student.name} teacherName={currentTeacherName} />
-              // <option value="student">{student.name}</option>
+            // <option value="student">{student.name}</option>
           )) }
           {/* </select> */}
         </div>
@@ -229,24 +257,32 @@ class TeacherHome extends React.Component {
             {/* <Button className="btn btn-sm btn-dark" onClick={this.showHistory} id="history">View Comment History</Button>
 
             <Button className="btn btn-sm btn-dark" onClick={this.newComment} id="newComment">Leave a Comment</Button> */}
-            <h4>Mass Text</h4>
+            <h3>Mass Text</h3>
           </ModalHeader>
           <ModalBody>
             <form action="/texts" method="post" onSubmit={this.sendMassText}>
-              <fieldset disabled={formDisabled}>
-                { this.state.allClasses.map(clss => (
+              {/* <button type="button" value="false" className="btn btn-info btn-sm" onClick={this.selectAll}>select all</button> */}
+              <input type="checkbox" onClick={this.selectAll} />
+              <h5 className="d-inline text-secondary ml-1">select/deselect all</h5>
+              <fieldset disabled={formDisabled} className="mt-2">
+                { allClasses.map(clss => (
                   <div>
-                    <h5>{ clss.name }</h5>
-                    { clss.students.map(student => (
-                      <div className="ml-2">
-                        <input type="checkbox" name={student.id} value={student.phone} onClick={this.toggleNumber} />
-                        {student.name}
-                      </div>
-                    )) }
+                    <fieldset>
+                      <input type="checkbox" onClick={this.selectAll} />
+                      <h4 className="d-inline ml-1">
+                        { clss.name }
+                      </h4>
+                      { clss.students.map(student => (
+                        <div className="ml-3">
+                          <input type="checkbox" name={student.id} value={student.phone} onClick={this.toggleNumber} />
+                          <span className="ml-1">{student.name}</span>
+                        </div>
+                      )) }
+                    </fieldset>
                   </div>
                 )) }
-                <textarea name="text-message" value={massTextMessage} onChange={this.changeMassTextMessage} />
-                <input type="submit" value="Submit" />
+                <textarea className="mt-2" name="text-message" value={massTextMessage} onChange={this.changeMassTextMessage} />
+                <div><input type="submit" value="Submit" /></div>
               </fieldset>
             </form>
             <div className="text-success">
