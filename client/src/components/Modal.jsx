@@ -176,7 +176,7 @@ class CommentModal extends React.Component {
     const { name } = this.props;
     return (
       <>
-        <Button variant="dark" onClick={this.handleShow} className="btn btn-sm">
+        <Button variant="dark" onClick={this.handleShow} className="btn btn-sm btn-info">
           {name}
         </Button>
         <Modal

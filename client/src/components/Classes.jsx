@@ -11,7 +11,7 @@ const Classes = props => (
   <div>
     <h4 display="inline-block">Your Current Classes</h4>
     <div>
-      <h5>{props.classList.map(eachClass => <ClassListItem teacherName={props.teacherName} eachClass={eachClass} />)}</h5>
+      <h3>{props.classList.map(eachClass => <ClassListItem teacherName={props.teacherName} eachClass={eachClass} />)}</h3>
     </div>
   </div>
 );

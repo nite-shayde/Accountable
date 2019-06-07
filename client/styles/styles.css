@@ -3,7 +3,7 @@
 .vertical-scroll {
     overflow-y: scroll;
     overflow-x: hidden;
-    max-height: 130px;
+    max-height: 200px;
 }
 
 
