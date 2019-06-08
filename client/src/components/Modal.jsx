@@ -24,6 +24,8 @@ class CommentModal extends React.Component {
     };
     this.handleShow = () => {
       this.setState({ show: true });
+      this.getComments();
+      this.getTextHistory();
     };
     this.handleHide = () => {
       this.setState({ show: false });
@@ -41,15 +43,15 @@ class CommentModal extends React.Component {
 
   componentDidMount() {
     this.getComments()
-      .then((data) => {
+      .then((response) => {
         this.setState({
-          comments: data.data,
+          comments: response.data,
         });
       });
     this.getTextHistory()
-      .then((data) => {
+      .then((response) => {
         this.setState({
-          textHistory: data.data,
+          textHistory: response.data,
         });
       });
   }
@@ -65,12 +67,11 @@ class CommentModal extends React.Component {
 
   getTextHistory() {
     const { teacherNumber, currentStudent } = this.props;
+    const { textHistory } = this.state;
     let phone = currentStudent.phone.replace(/-/g, '');
     phone = `+1${phone}`;
     const options = { params: { teacherNumber, parentNumber: phone } };
-    return axios.get('/sms', options).then((response) => {
-      this.setState({ textHistory: response.data });
-    });
+    return axios.get('/sms', options);
   }
 
   sendText() {
@@ -84,12 +85,14 @@ class CommentModal extends React.Component {
     let phone = currentStudent.phone.replace(/-/g, '');
     phone = `+1${phone}`;
 
+
     axios.post('/texts', {
       phone,
       message: textMessageText,
       teacherNumber,
     }).then((res) => {
-      this.setState({ textHistory });
+      this.setState({ textHistory: textHistory.concat(res.data) });
+      console.log(res.status);
     });
 
     this.setState({
@@ -135,6 +138,7 @@ class CommentModal extends React.Component {
       newComment: true,
       history: false,
     });
+    this.getComments();
   }
 
   showHistory() {
@@ -142,6 +146,7 @@ class CommentModal extends React.Component {
       newComment: false,
       history: true,
     });
+    this.getTextHistory();
   }
 
 
@@ -167,7 +172,7 @@ class CommentModal extends React.Component {
               </tr>
             </thead>
             {comments.map(comment => (
-              <tbody>
+              <tbody key={comment.id}>
                 <tr>
                   <td className="px-2">{teacherName}</td>
                   <td className="px-2">{comment.comment}</td>
@@ -186,7 +191,7 @@ class CommentModal extends React.Component {
     } else if (newComment) {
       whichRendered = (
         <div>
-          {textHistory.map(text => <TextMessageItem text={text} teacherName={teacherName} parentName={currentStudent.parentName} />)}
+          {textHistory.map(text => <TextMessageItem text={text} teacherName={teacherName} parentName={currentStudent.parentName} key={text.id} />)}
 
           <div>
             <input value={textMessageText} onChange={this.changeText} />
