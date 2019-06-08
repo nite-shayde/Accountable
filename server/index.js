@@ -11,7 +11,7 @@ const db = require('../database/index');
 const port = process.env.SERVER_PORT || 3000;
 
 const {
-  Students, Classes, Teachers, Comments, Messages, saveMessage,
+  Students, Classes, Teachers, Comments, Messages, saveMessage, getConvo,
 } = db.models;
 
 
@@ -288,11 +288,15 @@ app.post('/sms', (req, res) => {
 });
 
 app.get('/sms', (req, res) => {
-  db.models.Messages.findAll({
-  }).then((data) => {
-    res.send(data);
-  }).catch((err) => {
-    console.log(err);
+  const { parentNumber, teacherNumber } = req.query;
+  getConvo({
+    parentNumber,
+    teacherNumber,
+  }).then((result) => {
+    res.send(result);
+  }).catch((error) => {
+    console.log(error);
+    res.sendStatus(500);
   });
 });
 
