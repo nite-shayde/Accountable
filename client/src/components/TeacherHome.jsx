@@ -75,7 +75,6 @@ class TeacherHome extends React.Component {
       .then((response) => {
         const students = response.data;
         this.setState({ students });
-        console.log(this.state.students);
       })
       .catch((err) => {
         console.log(err);
@@ -200,7 +199,6 @@ class TeacherHome extends React.Component {
 
           <div className="">
             <h5 className="text-info">{`${currentTeacherName}`}</h5>
-            {/* <h3 className="mt-1"></h3> */}
           </div>
           <div>
             <img className="img-fluid" src="http://icons.iconarchive.com/icons/goodstuff-no-nonsense/free-space/1024/earth-icon.png" alt="space and beyond" />
@@ -212,7 +210,13 @@ class TeacherHome extends React.Component {
             <div className="card-body">
               <div className="vertical-scroll d-flex flex-column p-2 bg-light border">
                 { students.map(student => (
-                  <StudentModal currentStudent={student} name={student.name} teacherName={currentTeacherName} teacherNumber={currentTeacherNumber} />
+                  <StudentModal
+                    currentStudent={student}
+                    name={student.name}
+                    teacherName={currentTeacherName}
+                    teacherNumber={currentTeacherNumber}
+                    key={student.id}
+                  />
                 )) }
               </div>
             </div>
@@ -269,14 +273,14 @@ class TeacherHome extends React.Component {
                 <h5 className="d-inline text-secondary ml-1">select/deselect all</h5>
                 <fieldset disabled={formDisabled} className="mt-2">
                   { allClasses.map(clss => (
-                    <div>
+                    <div key={clss.name}>
                       <fieldset>
                         <input type="checkbox" onClick={this.selectAll} />
                         <h4 className="d-inline ml-1">
                           { clss.name }
                         </h4>
                         { clss.students.map(student => (
-                          <div className="ml-3">
+                          <div className="ml-3" key={student.name}>
                             <input type="checkbox" name={student.id} value={student.phone} onClick={this.toggleNumber} />
                             <span className="ml-1">{student.name}</span>
                           </div>

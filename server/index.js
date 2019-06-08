@@ -226,7 +226,9 @@ app.post('/login', (req, res) => {
 
 app.post('/texts', (req, res) => {
   // Mass text
-  const { phone, message, numbers, teacherNumber } = req.body;
+  const {
+    phone, message, numbers, teacherNumber,
+  } = req.body;
   if (numbers) {
     Promise.all(
       numbers.map(number => !number || client.messages.create({
@@ -246,6 +248,13 @@ app.post('/texts', (req, res) => {
     return;
   }
   // Single Text
+  const textMessage = {
+    incoming: false,
+    body: message,
+    teacherNumber,
+    parentNumber: phone,
+  };
+
   client.messages.create({
     to: phone,
     from: '+15042268038',
@@ -253,16 +262,13 @@ app.post('/texts', (req, res) => {
   }).then((results) => {
     // creating the message in the database
     console.log(results);
+    res.send(textMessage);
   }).catch((err) => {
     console.error(err);
+    res.sendStatus(500);
   });
   // saves 2 database
-  saveMessage({
-    incoming: false,
-    body: message,
-    teacherNumber,
-    parentNumber: phone,
-  });
+  saveMessage(textMessage);
 });
 
 /**
