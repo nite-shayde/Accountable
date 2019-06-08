@@ -19,6 +19,7 @@ class TeacherHome extends React.Component {
       currentTeacherId: 0,
       currentTeacherName: '',
       currentTeacherClasses: [],
+      currentTeacherNumber: '',
       inputState: '',
       renderInput: false,
       showMassTextModal: false,
@@ -29,6 +30,7 @@ class TeacherHome extends React.Component {
       confirmMessage: '',
       formDisabled: false,
     };
+
     this.getTeacherData = this.getTeacherData.bind(this);
     this.submitClass = this.submitClass.bind(this);
     this.changeInputState = this.changeInputState.bind(this);
@@ -47,11 +49,11 @@ class TeacherHome extends React.Component {
   componentDidMount() {
     this.getTeacherData()
       .then((data) => {
-        const { name, id } = data.data[0];
-
+        const { name, id, number } = data.data[0];
         this.setState({
           currentTeacherId: id,
           currentTeacherName: name,
+          currentTeacherNumber: number,
         });
       })
       .then(() => {
@@ -171,17 +173,6 @@ class TeacherHome extends React.Component {
   }
 
   selectAll(e) {
-    // const button = e.target;
-    // let select = true;
-    // // if (button.innerText === 'SELECT ALL') {
-    // if (!button.checked) {
-    //   // button.innerText = 'DESELECT ALL';
-    //   select = false;
-    // }
-    // else {
-    //   button.innerText = 'SELECT ALL';
-    //   select = false;
-    // }
     const button = e.target;
     const { checked } = button;
     [...button.parentElement.elements].forEach((elem) => {
@@ -195,9 +186,8 @@ class TeacherHome extends React.Component {
 
   render() {
     const { logout } = this.props;
-    // console.log(this.state.students);
     const {
-      massTextMessage, showMassTextModal, confirmMessage, formDisabled,
+      massTextMessage, showMassTextModal, confirmMessage, formDisabled, currentTeacherNumber,
     } = this.state;
 
     const {
@@ -222,7 +212,7 @@ class TeacherHome extends React.Component {
             <div className="card-body">
               <div className="vertical-scroll d-flex flex-column p-2 bg-light border">
                 { students.map(student => (
-                  <StudentModal currentStudent={student} name={student.name} teacherName={currentTeacherName} />
+                  <StudentModal currentStudent={student} name={student.name} teacherName={currentTeacherName} teacherNumber={currentTeacherNumber} />
                 )) }
               </div>
             </div>
