@@ -64,7 +64,11 @@ class CommentModal extends React.Component {
   }
 
   getTextHistory() {
-    return axios.get('/sms').then((response) => {
+    const { teacherNumber, currentStudent } = this.props;
+    let phone = currentStudent.phone.replace(/-/g, '');
+    phone = `+1${phone}`;
+    const options = { params: { teacherNumber, parentNumber: phone } };
+    return axios.get('/sms', options).then((response) => {
       this.setState({ textHistory: response.data });
     });
   }
