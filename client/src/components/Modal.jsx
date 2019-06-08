@@ -64,24 +64,28 @@ class CommentModal extends React.Component {
   }
 
   getTextHistory() {
-    const { currentReply } = this.state;
-    return axios.get('/sms');
+    return axios.get('/sms').then((response) => {
+      this.setState({ textHistory: response.data });
+    });
   }
 
   sendText() {
-    const { textMessageText } = this.state;
-    const { currentStudent, teacherName } = this.props;
+    const { textMessageText, textHistory } = this.state;
+    const { currentStudent, teacherName, teacherNumber } = this.props;
     // make post request to server
 
-    let body = `From: ${teacherName}\nTo: ${currentStudent.parentName}\n\nMsg: ${ textMessageText }`;
-    body += '\n\n*Note: if responding, please indicate who your message is to.';
+    // let body = `From: ${teacherName}\nTo: ${currentStudent.parentName}\n\nMsg: ${textMessageText}`;
+    // body += '\n\n*Note: if responding, please indicate who your message is to.';
 
     let phone = currentStudent.phone.replace(/-/g, '');
     phone = `+1${phone}`;
 
     axios.post('/texts', {
       phone,
-      message: body,
+      message: textMessageText,
+      teacherNumber,
+    }).then((res) => {
+      this.setState({ textHistory });
     });
 
     this.setState({
@@ -138,56 +142,56 @@ class CommentModal extends React.Component {
 
 
   render() {
-    const { history, comments, newComment } = this.state;
-    const { currentStudent } = this.props;
+    const {
+      history, comments, newComment, textHistory, show, commentText, textMessageText,
+    } = this.state;
+    const { currentStudent, name, teacherName } = this.props;
+
     let whichRendered;
     if (history) {
       whichRendered = (
         <div>
           <h3>
-            Comment History for
-            {currentStudent.name}
+            {`Comment History for ${currentStudent.name}`}
           </h3>
           <table className="comentTable">
-            <thead>
+            <thead className="bg-secondary text-white p-2">
               <tr>
-                <td className="tableHead tableRows">Comment</td>
-                <td className="tableHead tableRows">Date</td>
+                <th className="px-2">Teacher</th>
+                <th className="px-2">Comment</th>
+                <th className="px-2">Date</th>
               </tr>
             </thead>
             {comments.map(comment => (
               <tbody>
                 <tr>
-                  <td className="tableRows">{comment.comment}</td>
-                  <td className="tableRows">{moment().format('ddd, MMM, Do')}</td>
+                  <td className="px-2">{teacherName}</td>
+                  <td className="px-2">{comment.comment}</td>
+                  <td className="px-2">{moment(comment.createdAt).format('ddd, MMM, Do')}</td>
                 </tr>
               </tbody>
             ))}
           </table>
+          <div className="mt-3">
+            <h6>{`Add Comment for ${name}`}</h6>
+            <input value={commentText} onChange={this.changeComment} />
+            <button type="submit" onClick={this.submitComment} className="btn btn-sm btn-success">Add Comment</button>
+          </div>
         </div>
       );
     } else if (newComment) {
-      const { name } = this.props;
-      const { commentText, textMessageText } = this.state;
       whichRendered = (
         <div>
-          <h5>
-          Add Comment for
-            {name}
-          </h5>
-          <div>
-            <input value={commentText} onChange={this.changeComment} />
-            <button type="submit" onClick={this.submitComment}>Submit Comment</button>
-          </div>
+          {textHistory.map(text => <TextMessageItem text={text} teacherName={teacherName} parentName={currentStudent.parentName} />)}
+
           <div>
             <input value={textMessageText} onChange={this.changeText} />
-            <button type="submit" onClick={this.sendText}>Send Text</button>
+            <button type="submit" onClick={this.sendText} className="btn btn-sm btn-success">Send Text</button>
           </div>
         </div>
       );
     }
-    const { show } = this.state;
-    const { name } = this.props;
+
 
     return (
       <>
@@ -203,7 +207,7 @@ class CommentModal extends React.Component {
             <ModalTitle id="title" />
             <Button className="btn btn-sm btn-dark" onClick={this.showHistory} id="history">View Comment History</Button>
 
-            <Button className="btn btn-sm btn-dark" onClick={this.newComment} id="newComment">Leave a Comment</Button>
+            <Button className="btn btn-sm btn-dark" onClick={this.newComment} id="newComment">{`TEXT ${currentStudent.parentName}`}</Button>
           </ModalHeader>
           <ModalBody>
             {whichRendered}
@@ -215,6 +219,22 @@ class CommentModal extends React.Component {
       </>
     );
   }
+}
+
+
+function TextMessageItem(props) {
+  const { text, teacherName, parentName } = props;
+  const { incoming, body } = text;
+  let senderClass = 'font-weight-bold';
+  if (incoming) senderClass += ' text-info';
+  return (
+    <div className="d-flex flex-row">
+      <div>
+        <span className={senderClass}>{incoming ? parentName : teacherName }</span>
+        {`: ${body}`}
+      </div>
+    </div>
+  );
 }
 
 export default CommentModal;
