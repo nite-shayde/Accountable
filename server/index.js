@@ -11,7 +11,7 @@ const db = require('../database/index');
 const port = process.env.SERVER_PORT || 3000;
 
 const {
-  Students, Classes, Teachers, Comments, Messages,
+  Students, Classes, Teachers, Comments, Messages, saveMessage,
 } = db.models;
 
 
@@ -226,7 +226,7 @@ app.post('/login', (req, res) => {
 
 app.post('/texts', (req, res) => {
   // Mass text
-  const { phone, message, numbers } = req.body;
+  const { phone, message, numbers, teacherNumber } = req.body;
   if (numbers) {
     Promise.all(
       numbers.map(number => !number || client.messages.create({
@@ -252,14 +252,16 @@ app.post('/texts', (req, res) => {
     body: message,
   }).then((results) => {
     // creating the message in the database
-    db.models.Messages.create({
-      incoming: false,
-      body: results.body,
-      phoneNumber: results.from,
-    });
     console.log(results);
   }).catch((err) => {
     console.error(err);
+  });
+  // saves 2 database
+  saveMessage({
+    incoming: false,
+    body: message,
+    teacherNumber,
+    parentNumber: phone,
   });
 });
 
@@ -273,10 +275,11 @@ app.post('/sms', (req, res) => {
   // debugger;
   const msg = req.body;
   // console.log({ msg: msg.Body, to: msg.To, from: msg.From });
-  db.models.Messages.create({
+  saveMessage({
     incoming: true,
     body: msg.Body,
-    phoneNumber: msg.From,
+    teacherNumber: msg.To,
+    parentNumber: msg.From,
   });
   // const twiml = new MessagingResponse();
   // twiml.message('Good Job');
