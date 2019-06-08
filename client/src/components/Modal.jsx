@@ -20,6 +20,7 @@ class CommentModal extends React.Component {
       commentText: '',
       comments: [],
       textMessageText: '',
+      textHistory: [],
     };
     this.handleShow = () => {
       this.setState({ show: true });
@@ -35,6 +36,7 @@ class CommentModal extends React.Component {
     this.changeComment = this.changeComment.bind(this);
     this.changeText = this.changeText.bind(this);
     this.sendText = this.sendText.bind(this);
+    this.getTextHistory = this.getTextHistory.bind(this);
   }
 
   componentDidMount() {
@@ -42,6 +44,12 @@ class CommentModal extends React.Component {
       .then((data) => {
         this.setState({
           comments: data.data,
+        });
+      });
+    this.getTextHistory()
+      .then((data) => {
+        this.setState({
+          textHistory: data.data,
         });
       });
   }
@@ -55,11 +63,17 @@ class CommentModal extends React.Component {
     });
   }
 
+  getTextHistory() {
+    const { currentReply } = this.state;
+    return axios.get('/sms');
+  }
+
   sendText() {
     const { textMessageText } = this.state;
     const { currentStudent, teacherName } = this.props;
     // make post request to server
-    let body = `From: ${teacherName}\nTo: ${currentStudent.parentName}\n\nMsg: ${textMessageText}`;
+
+    let body = `From: ${teacherName}\nTo: ${currentStudent.parentName}\n\nMsg: ${ textMessageText }`;
     body += '\n\n*Note: if responding, please indicate who your message is to.';
 
     let phone = currentStudent.phone.replace(/-/g, '');
@@ -174,6 +188,7 @@ class CommentModal extends React.Component {
     }
     const { show } = this.state;
     const { name } = this.props;
+
     return (
       <>
         <Button variant="dark" onClick={this.handleShow} className="btn btn-sm btn-info">

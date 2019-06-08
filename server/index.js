@@ -4,14 +4,14 @@ const path = require('path');
 const bodyParser = require('body-parser');
 require('dotenv').config();
 const client = require('twilio')(process.env.accountSid, process.env.authToken);
-const { MessagingResponse } = require('twilio').twiml;
+// const { MessagingResponse } = require('twilio').twiml;
 const http = require('http');
 const db = require('../database/index');
 
 const port = process.env.SERVER_PORT || 3000;
 
 const {
-  Students, Classes, Teachers, Comments,
+  Students, Classes, Teachers, Comments, Messages, saveMessage,
 } = db.models;
 
 
@@ -226,7 +226,7 @@ app.post('/login', (req, res) => {
 
 app.post('/texts', (req, res) => {
   // Mass text
-  const { phone, message, numbers } = req.body;
+  const { phone, message, numbers, teacherNumber } = req.body;
   if (numbers) {
     Promise.all(
       numbers.map(number => !number || client.messages.create({
@@ -236,9 +236,6 @@ app.post('/texts', (req, res) => {
       })),
     ).then((messages) => {
       console.log(messages);
-      // db.models.Messages.create({
-
-      // });
       console.log('Messages sent!');
       res.sendStatus(201);
     })
@@ -255,20 +252,22 @@ app.post('/texts', (req, res) => {
     body: message,
   }).then((results) => {
     // creating the message in the database
-    db.models.Messages.create({
-      incoming: false,
-      body: results.body,
-      phoneNumber: results.from,
-    });
     console.log(results);
   }).catch((err) => {
     console.error(err);
+  });
+  // saves 2 database
+  saveMessage({
+    incoming: false,
+    body: message,
+    teacherNumber,
+    parentNumber: phone,
   });
 });
 
 /**
  * POST request handler that will recieve the incoming text
- * from twilio
+ * from twilio. Twilio's response service is commentted out
  * ::To run locally use command, ngrok http 1337
  */
 
@@ -276,15 +275,25 @@ app.post('/sms', (req, res) => {
   // debugger;
   const msg = req.body;
   // console.log({ msg: msg.Body, to: msg.To, from: msg.From });
-  db.models.Messages.create({
+  saveMessage({
     incoming: true,
     body: msg.Body,
-    phoneNumber: msg.From,
+    teacherNumber: msg.To,
+    parentNumber: msg.From,
   });
   // const twiml = new MessagingResponse();
   // twiml.message('Good Job');
   res.writeHead(200, { 'Content-Type': 'text/xml' });
   // res.end(twiml.toString());
+});
+
+app.get('/sms', (req, res) => {
+  db.models.Messages.findAll({
+  }).then((data) => {
+    res.send(data);
+  }).catch((err) => {
+    console.log(err);
+  });
 });
 
 http.createServer(app).listen(1337, () => {
