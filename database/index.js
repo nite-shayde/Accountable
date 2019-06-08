@@ -165,6 +165,22 @@ function saveMessage(message) {
   });
 }
 
+function getConvo(numbers) {
+  const { parentNumber, teacherNumber } = numbers;
+  return Convos.findOne({
+    where: {
+      parentNumber,
+      teacherNumber,
+    },
+  }).then((convo) => {
+    return Messages.findAll({
+      where: {
+        convoID: convo.id,
+      },
+    });
+  });
+}
+getConvo({ parentNumber: '+16172839108', teacherNumber: '+15042268038' });
 // saveMessge({ teacherNumber: '123458901', parentNumber: '00000', incoming: true, body: 'what u did wit mah kid?' })
 
 // Convos.create({
@@ -186,6 +202,7 @@ module.exports.models = {
   Convos,
   Messages,
   saveMessage,
+  getConvo,
 };
 
 
