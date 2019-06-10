@@ -253,6 +253,7 @@ class TeacherHome extends React.Component {
               teacherID={currentTeacherId}
               teacherName={currentTeacherName}
               classList={currentTeacherClasses}
+              teacherNumber={currentTeacherNumber}
             />
           </div>
 
