@@ -121,7 +121,7 @@ class Students extends React.Component {
 
   render() {
     const {
-      className, classID, changeState, showList, teacherName,
+      className, classID, changeState, showList, teacherName, teacherNumber,
     } = this.props;
 
     const { students } = this.state;
@@ -147,7 +147,7 @@ class Students extends React.Component {
               {
                 students.map(student => (
                   <tr key={student.id} className="student-row">
-                    <td><Modal currentStudent={student} name={student.name} teacherName={teacherName} /></td>
+                    <td><Modal currentStudent={student} name={student.name} teacherName={teacherName} teacherNumber={teacherNumber} /></td>
                     <td>{student.parentName || 'no parent name'}</td>
                     <td>{student.phone || 'no phone number'}</td>
                     <td>{student.email || 'no email'}</td>

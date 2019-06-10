@@ -45,7 +45,7 @@ class ClassListItem extends React.Component {
 
   render() {
     const { studentRender } = this.state;
-    const { eachClass, teacherName } = this.props;
+    const { eachClass, teacherName, teacherNumber } = this.props;
     return (
       <div>
         <ul className="studentList">
@@ -60,6 +60,7 @@ class ClassListItem extends React.Component {
                 className={eachClass.name}
                 classID={eachClass.id}
                 teacherName={teacherName}
+                teacherNumber={teacherNumber}
               />
             ) : null}
         </ul>
